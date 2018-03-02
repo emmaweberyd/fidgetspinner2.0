@@ -127,8 +127,7 @@ function init(){
 	);
 
 	sceneRoot2.translateZ(5000); //translatera ur bild
-}
-
+	
 	// load a resource
 	loader.load(spinnerGreen.object,
 		// called when resource is loaded
@@ -152,6 +151,9 @@ function init(){
 	);
 
 	sceneRoot3.translateZ(5000); //translatera ur bild
+}
+
+	
 
 function animate() {
 
