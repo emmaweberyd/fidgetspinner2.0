@@ -1,0 +1,22 @@
+Röd:
+~5cm = 0.05m
+~0.7cm = 0.007m
+
+area = 0.00035
+
+Silver:
+~10.5cm = 0.105m
+~0.7cm = 0.007m
+
+area = 0.000735
+
+Grön:
+~12.5cm = 0.125m
+~0.8cm = 0.008m
+
+area: 0.001
+
+
+tid för grön
+med: 2min45s
+utan: 
