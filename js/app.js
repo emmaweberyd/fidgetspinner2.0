@@ -10,31 +10,33 @@ var fidget = 1;
 
 // variables to change
 //var startForce = 10; //initial force = 10
-var forcetime = 200; // 200    FIXA ASAP!!!
+var forcetime = 200; // 200   
 var steplength = 0.01; // 0.05
 
 var inertiaRed = 0.00005; // 0.00005
 var frictionRed = 0.0000024; // 0.0000024
 var radiusRed = 0.026; // 0.026
-var spinareaRed = 0.000455; // 0.000546, borde räknas om
+var spinareaRed = 0.00035; // 0.00035
 var spinredmass = 0.0560; // 0.0560
 
 var inertiaSilver = 0.00022697; // 0.00022697
 var frictionSilver = 0.0000024; // 0.0000024
 var radiusSilver = 0.04; // 0.04
-var spinareaSilver = 0.000546; // fel 
+var spinareaSilver = 0.000735; // 0.000735 
 var spinsilvermass = 0.112;
 
 var inertiaGreen = 0.00037798; // 0.00037798
 var frictionGreen = 0.0000024; // 0.0000024
 var radiusGreen = 0.042; // 0.042
-var spinareaGreen = 0.000546; // fel
+var spinareaGreen = 0.001; // 0.001
 var spingreenmass = 0.196;
 
 var slider = document.getElementById("initialforce");
 var output = document.getElementById("demo");
 var velocityoutput = document.getElementById("velocity");
 var currentmass = document.getElementById("mass"); 
+var inertia = document.getElementById("inertia");
+var friction = document.getElementById("drag");
 
 // Variabler för start
 var raycaster = new THREE.Raycaster();
@@ -60,7 +62,7 @@ var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeig
 camera.position.set(0, 0, 1000);
 
 var renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize( window.innerWidth*0.85, window.innerHeight*0.85 );
 container.appendChild( renderer.domElement );
 
 // instantiate a loader
@@ -257,6 +259,8 @@ function render() {
 		velocityoutput.innerHTML = Number(spinnerRed.angularVelocity.toFixed(5));
 		//Mass
 		currentmass.innerHTML = spinnerRed.mass;
+		inertia.innerHTML = spinnerRed.inertia;
+		friction.innerHTML = spinnerRed.friction;
 	}
 	else if (fidget == 2){
 		spinnerSilver.spin(force, steplength);
@@ -265,6 +269,8 @@ function render() {
 		velocityoutput.innerHTML = Number(spinnerSilver.angularVelocity.toFixed(5));
 		//Mass
 		currentmass.innerHTML = spinnerSilver.mass;
+		inertia.innerHTML = spinnerSilver.inertia;
+		friction.innerHTML = spinnerSilver.friction;
 	}
 	else if (fidget == 3){
 		spinnerGreen.spin(force, steplength);
@@ -273,6 +279,8 @@ function render() {
 		velocityoutput.innerHTML = Number(spinnerGreen.angularVelocity.toFixed(5));
 		//Mass
 		currentmass.innerHTML = spinnerGreen.mass;
+		inertia.innerHTML = spinnerGreen.inertia;
+		friction.innerHTML = spinnerGreen.friction;
 	}
 
 	renderer.render(scene, camera);
@@ -358,6 +366,9 @@ function Start(){
 	force = document.getElementById("initialforce").value;
 	isStopped = false;
 	document.getElementById("button").innerHTML = "STOPP";
+	
+	console.log("Start() - Force = " + force);
+	
 
 }
 
