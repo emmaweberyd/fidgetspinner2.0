@@ -15,6 +15,7 @@ class Spinner {
 		this.spintimez = 0;
 		this.air = [];
 		this.capturedata = false; 
+
 		
  	}
 
@@ -54,11 +55,12 @@ class Spinner {
 		console.log("silver spintimez = " + this.spintimez);
 		
 	}
-	
+
 	captureData1()
 	{
 		this.capturedata= true;
 		
 	}
+
 
 }
