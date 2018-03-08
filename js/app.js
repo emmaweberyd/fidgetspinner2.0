@@ -10,13 +10,13 @@ var fidget = 1;
 
 // variables to change
 //var startForce = 10; //initial force = 10
-var forcetime = 200; // 200
+var forcetime = 200; // 200    FIXA ASAP!!!
 var steplength = 0.01; // 0.05
 
 var inertiaRed = 0.00005; // 0.00005
 var frictionRed = 0.0000024; // 0.0000024
 var radiusRed = 0.026; // 0.026
-var spinareaRed = 0.000546; // 0.000546, borde räknas om
+var spinareaRed = 0.000455; // 0.000546, borde räknas om
 var spinredmass = 0.0560; // 0.0560
 
 var inertiaSilver = 0.00022697; // 0.00022697
@@ -34,7 +34,26 @@ var spingreenmass = 0.196;
 var slider = document.getElementById("initialforce");
 var output = document.getElementById("demo");
 var velocityoutput = document.getElementById("velocity");
-var currentmass = document.getElementById("mass");
+var currentmass = document.getElementById("mass"); 
+
+// Variabler för start
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+var ismousedown = false;
+var isclicked = false;
+
+var startposX;
+var startposY;
+
+var endposX;
+var endposY;
+
+var timedown = 0;
+var starttimez = 0;
+var endtime = 0;
+
+var dis = 0;
+var massForce = 0;
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 2000 );
@@ -56,12 +75,12 @@ camera.add( pointLight );
 scene.add( camera );
 
 // sceen root
-var sceneRoot1 = new THREE.Group();
-var sceneRoot2 = new THREE.Group();
-var sceneRoot3 = new THREE.Group();
-scene.add(sceneRoot1);
-scene.add(sceneRoot2);
-scene.add(sceneRoot3);
+var sceneRootRed = new THREE.Group();
+var sceneRootSilver = new THREE.Group();
+var sceneRootGreen = new THREE.Group();
+scene.add(sceneRootRed);
+scene.add(sceneRootSilver);
+scene.add(sceneRootGreen);
 
 // Spinner options
 var spinnerRed = new Spinner(radiusRed, inertiaRed, frictionRed, spinareaRed, "textures/red.png", "spinners/spinner.obj", spinredmass);
@@ -75,12 +94,12 @@ animate();
 function init(){
 
 	//texture = textureLoader.load( currentSpinner.texture );
-	texture1 = textureLoader.load(spinnerRed.texture);
-	texture2 = textureLoader.load(spinnerSilver.texture);
-	texture3 = textureLoader.load(spinnerGreen.texture);
+	textureRed = textureLoader.load(spinnerRed.texture);
+	textureSilver = textureLoader.load(spinnerSilver.texture);
+	textureGreen = textureLoader.load(spinnerGreen.texture);
 
 	// initialize start time
-	startTime = Date.now();
+	// startTime = Date.now();
 
 	// load a resource
 	loader.load(spinnerRed.object,
@@ -91,7 +110,7 @@ function init(){
 
 				if ( child instanceof THREE.Mesh ) {
 
-					child.material.map = texture1;
+					child.material.map = textureRed;
 
 				}
 
@@ -99,7 +118,7 @@ function init(){
 			// Rätar upp fidget 
 			object.rotation.x = pi/2;
 			// lägger till fidget i scenen
-			sceneRoot1.add( object );
+			sceneRootRed.add( object );
 
 		}
 	);
@@ -113,7 +132,7 @@ function init(){
 
 				if ( child instanceof THREE.Mesh ) {
 
-					child.material.map = texture2;
+					child.material.map = textureSilver;
 
 				}
 
@@ -121,13 +140,14 @@ function init(){
 			// Rätar upp fidget 
 			object.rotation.x = pi/2;
 			// lägger till fidget i scenen
-			sceneRoot2.add( object );
+			sceneRootSilver.add( object );
 
 		}
 	);
 
-	sceneRoot2.translateZ(5000); //translatera ur bild
-}
+	sceneRootSilver.translateZ(5000); //translatera ur bild
+	
+
 
 	// load a resource
 	loader.load(spinnerGreen.object,
@@ -138,7 +158,7 @@ function init(){
 
 				if ( child instanceof THREE.Mesh ) {
 
-					child.material.map = texture3;
+					child.material.map = textureGreen;
 
 				}
 
@@ -146,12 +166,16 @@ function init(){
 			// Rätar upp fidget 
 			object.rotation.x = pi/2;
 			// lägger till fidget i scenen
-			sceneRoot3.add( object );
+			sceneRootGreen.add( object );
 
 		}
 	);
 
-	sceneRoot3.translateZ(5000); //translatera ur bild
+	sceneRootGreen.translateZ(5000); //translatera ur bild
+	
+	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+}
+
 
 function animate() {
 
@@ -162,21 +186,75 @@ function animate() {
 
 function render() {
 
+	MousePos();
+
 	//Force
 	output.innerHTML = slider.value;
 	slider.oninput = function() {
 		output.innerHTML = this.value;
 	}
 
-	time = Date.now();
-	ellapsedTime = time - startTime;
+	//time = Date.now();
+	//ellapsedTime = time - startTime;
+	//console.log("start ellapsedTime = " + ellapsedTime);
 
-	if(force != 0 && ellapsedTime > forcetime) //200 millisec = 0.2 sec
-		force = 0; //after some time, stop applying force
+	raycaster.setFromCamera( mouse, camera );
+
+	// calculate objects intersecting the picking ray
+	var intersects = raycaster.intersectObjects( scene.children, true);
+	
+	
+	
+	
+	if (intersects.length > 0)
+	{
+		console.log("intersects.length = " + intersects.length);
+		// stannar fidget när man dubbelklickar
+		document.addEventListener("dblclick", Stop, false);
+		
+	}
+	
+	if (fidget == 1)
+	{
+		massForce = spinnerRed.mass;
+	}	
+
+	if (fidget == 2)
+	{
+		massForce = spinnerSilver.mass;
+	}	
+
+	if (fidget == 3)
+	{
+		massForce = spinnerGreen.mass;
+	}		
+	
+	
+	if (intersects.length > 0 && ismousedown) 
+	{		
+		force = massForce * ((dis * timedown) / timedown);
+		spinnerRed.restartSpintimez();
+		spinnerSilver.restartSpintimez();
+		spinnerGreen.restartSpintimez();
+		console.log("massForce = " + massForce);
+		console.log("dis = " + dis);
+		console.log("timedown = " + timedown);
+		console.log("force = " + force);
+		
+		if (force > 1.2)
+			force = 1.2;
+
+		//console.log("in loop ellapsedTime = " + ellapsedTime);
+	}
+	
+	
+	
+	// if(force != 0 && ellapsedTime > forcetime) //200 millisec = 0.2 sec
+		// force = 0; //after some time, stop applying force
 
 	if (fidget == 1){
 		spinnerRed.spin(force, steplength); 
-		sceneRoot1.rotation.z += spinnerRed.angularPosition - spinnerRed.oldPosition;
+		sceneRootRed.rotation.z += spinnerRed.angularPosition - spinnerRed.oldPosition;
 		//Velocity
 		velocityoutput.innerHTML = Number(spinnerRed.angularVelocity.toFixed(5));
 		//Mass
@@ -184,7 +262,7 @@ function render() {
 	}
 	else if (fidget == 2){
 		spinnerSilver.spin(force, steplength);
-		sceneRoot2.rotation.z += spinnerSilver.angularPosition - spinnerSilver.oldPosition;
+		sceneRootSilver.rotation.z += spinnerSilver.angularPosition - spinnerSilver.oldPosition;
 		//Velocity
 		velocityoutput.innerHTML = Number(spinnerSilver.angularVelocity.toFixed(5));
 		//Mass
@@ -192,7 +270,7 @@ function render() {
 	}
 	else if (fidget == 3){
 		spinnerGreen.spin(force, steplength);
-		sceneRoot3.rotation.z += spinnerGreen.angularPosition - spinnerGreen.oldPosition;
+		sceneRootGreen.rotation.z += spinnerGreen.angularPosition - spinnerGreen.oldPosition;
 		//Velocity
 		velocityoutput.innerHTML = Number(spinnerGreen.angularVelocity.toFixed(5));
 		//Mass
@@ -210,27 +288,30 @@ function render() {
 function updateCurrentSpinner(number) {
 	if (number === 1){
 		fidget = 1;
-		moveAway(sceneRoot2);
-		moveAway(sceneRoot3);
+		moveAway(sceneRootSilver);
+		moveAway(sceneRootGreen);
 		spinnerGreen.stopSpin();
 		spinnerSilver.stopSpin();
-		moveToOrigin(sceneRoot1);
+		moveToOrigin(sceneRootRed);
+		stop();
 	}
 	else if (number === 2){
 		fidget = 2;
-		moveAway(sceneRoot1);
-		moveAway(sceneRoot3);
+		moveAway(sceneRootRed);
+		moveAway(sceneRootGreen);
 		spinnerGreen.stopSpin();
 		spinnerRed.stopSpin();
-		moveToOrigin(sceneRoot2);
+		moveToOrigin(sceneRootSilver);
+		stop();
 	}
 	else if (number === 3){
 		fidget = 3;
-		moveAway(sceneRoot2);
-		moveAway(sceneRoot1);
+		moveAway(sceneRootSilver);
+		moveAway(sceneRootRed);
 		spinnerRed.stopSpin();
 		spinnerSilver.stopSpin();
-		moveToOrigin(sceneRoot3);
+		moveToOrigin(sceneRootGreen);
+		stop();
 	}
 	isStopped = true;
 	document.getElementById('button').innerHTML = "START";
@@ -251,13 +332,20 @@ function moveAway(sceneRoot){
 function Button(){
 
 	if(isStopped)
+	{
 		Start();
+		isclicked = true;
+	}
 	else 
+	{
 		Stop();
+		isclicked = false;
+	}
 
 }
 
 function Stop(){
+	force = 0;
 	spinnerRed.stopSpin();
 	spinnerSilver.stopSpin();
 	spinnerGreen.stopSpin();
@@ -268,14 +356,93 @@ function Stop(){
 
 function Start(){
 
-	restartTime();
+	// restartTime();
 	force = document.getElementById("initialforce").value;
 	isStopped = false;
 	document.getElementById("button").innerHTML = "STOPP";
+	
+	
+	
+	
+	if (fidget == 1)
+	{
+		spinnerRed.captureData1();
+	}
+	
+	if (fidget == 2)
+	{
+		spinnerSilver.captureData1();
+	}
+	
+	if (fidget == 3)
+	{
+		spinareaGreen.captureData1();
+	}
 
 }
 
-function restartTime(){ startTime = Date.now(); }
+// function restartTime(){ 
+
+	// startTime = Date.now(); 
+// }
+
+/*************************************
+*     Starta fidget med mustryck	 *
+*************************************/
+
+function MousePos() {
+	
+	document.onmousedown = function(a){
+		
+		ismousedown = true;
+		
+		startposX = a.pageX;
+		startposY = a.pageY;
+		// console.log("Start: X = " + startposX + ", Y = " + startposY);
+		
+		starttimez = Date.now();
+		
+	}
+
+	document.onmouseup = function(a){
+		
+		ismousedown = false;
+		
+		endposX = a.pageX;
+		endposY = a.pageY;
+		// console.log("Stopp: X = " + endposX + ", Y = " + endposY);
+		
+		endtime = Date.now();
+		
+		
+		dis = Math.pow((endposX-startposX), 2) + Math.pow((endposY-startposY), 2);
+		dis = Math.sqrt(dis);
+		
+		timedown = endtime - starttimez;
+		
+		console.log("Tid: " + timedown);
+		console.log("Sträcka: " + dis);
+	}
+	
+
+}
+
+function onDocumentMouseMove( event ) {
+
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+	// console.log("mouse.x = " + mouse.x + ", mouse.y = " + mouse.y);
+
+}
+
+
+function stopFidget( event ) {
+	console.log("Kör stopFidget()");
+	stop();
+	
+}
+
 
 
 
