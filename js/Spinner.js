@@ -13,8 +13,6 @@ class Spinner {
 		this.oldPosition = 0;
 		this.mass = mass;
 		this.spintimez = 0;
-		this.air = [];
-		this.capturedata = false; 
 		this.Radius = Radius;
 
 		
@@ -35,13 +33,6 @@ class Spinner {
 		// 0.5 i formel, 0.4 är luftmotståndskoefficient, 1.2 är luftens densitet
 		this.airResistance = 0.5 * 0.4 * 1.2041 *  this.spinarea * Math.pow(this.radius*this.angularVelocity*this.Radius , 2);
 		
-		// console.log("air resistance = " + this.airResistance);
-		if(this.capturedata)
-		{
-			this.air.push(this.airResistance);
-		}
-		
-		console.log("längd: " + this.air.length);
 	}
 
 	stopSpin(){
@@ -54,12 +45,6 @@ class Spinner {
 		
 		this.spintimez = 0;
 		console.log("silver spintimez = " + this.spintimez);
-		
-	}
-
-	captureData1()
-	{
-		this.capturedata= true;
 		
 	}
 

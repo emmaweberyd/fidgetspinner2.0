@@ -39,11 +39,9 @@ var slider = document.getElementById("initialforce");
 var output = document.getElementById("demo");
 var velocityoutput = document.getElementById("velocity");
 var currentmass = document.getElementById("mass"); 
-<<<<<<< HEAD
-=======
+
 var inertia = document.getElementById("inertia");
 var friction = document.getElementById("drag");
->>>>>>> 6acae1669aa1399bdd6168fd1383f7ba2a5a439e
 
 // Variabler för start
 var raycaster = new THREE.Raycaster();
@@ -217,7 +215,6 @@ function render() {
 	
 	if (intersects.length > 0)
 	{
-		console.log("intersects.length = " + intersects.length);
 		// stannar fidget när man dubbelklickar
 		document.addEventListener("dblclick", Stop, false);
 		
@@ -249,12 +246,7 @@ function render() {
 		console.log("dis = " + dis);
 		console.log("timedown = " + timedown);
 		console.log("force = " + force);
-		
-<<<<<<< HEAD
-		if (force > 1.2)
-			force = 1.2;
-=======
->>>>>>> 6acae1669aa1399bdd6168fd1383f7ba2a5a439e
+
 
 		//console.log("in loop ellapsedTime = " + ellapsedTime);
 	}
@@ -379,28 +371,6 @@ function Start(){
 	isStopped = false;
 	document.getElementById("button").innerHTML = "STOPP";
 	
-<<<<<<< HEAD
-	
-	
-	
-	if (fidget == 1)
-	{
-		spinnerRed.captureData1();
-	}
-	
-	if (fidget == 2)
-	{
-		spinnerSilver.captureData1();
-	}
-	
-	if (fidget == 3)
-	{
-		spinareaGreen.captureData1();
-	}
-=======
-	console.log("Start() - Force = " + force);
-	
->>>>>>> 6acae1669aa1399bdd6168fd1383f7ba2a5a439e
 
 }
 
