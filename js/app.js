@@ -10,21 +10,17 @@ var fidget = 1;
 
 // variables to change
 //var startForce = 10; //initial force = 10
-<<<<<<< HEAD
+
 var forcetime = 200; // 200    FIXA ASAP!!!
-=======
-var forcetime = 200; // 200   
->>>>>>> 6acae1669aa1399bdd6168fd1383f7ba2a5a439e
+
 var steplength = 0.01; // 0.05
 
 var inertiaRed = 0.00005; // 0.00005
 var frictionRed = 0.0000024; // 0.0000024
 var radiusRed = 0.026; // 0.026
-<<<<<<< HEAD
-var spinareaRed = 0.000455; // 0.000546, borde räknas om
-=======
+
 var spinareaRed = 0.00035; // 0.00035
->>>>>>> 6acae1669aa1399bdd6168fd1383f7ba2a5a439e
+
 var spinredmass = 0.0560; // 0.0560
 
 var inertiaSilver = 0.00022697; // 0.00022697
@@ -96,9 +92,9 @@ scene.add(sceneRootSilver);
 scene.add(sceneRootGreen);
 
 // Spinner options
-var spinnerRed = new Spinner(radiusRed, inertiaRed, frictionRed, spinareaRed, "textures/red.png", "spinners/spinner.obj", spinredmass);
-var spinnerSilver = new Spinner(radiusSilver, inertiaSilver, frictionSilver, spinareaSilver, "textures/metal.jpg", "spinners/gulbatman.obj", spinsilvermass);
-var spinnerGreen = new Spinner(radiusGreen, inertiaGreen, frictionGreen, spinareaGreen, "textures/marble.jpg", "spinners/tredjespinner.obj", spingreenmass);
+var spinnerRed = new Spinner(radiusRed, inertiaRed, frictionRed, spinareaRed, "textures/red.png", "spinners/spinner.obj", spinredmass,0.042);
+var spinnerSilver = new Spinner(radiusSilver, inertiaSilver, frictionSilver, spinareaSilver, "textures/metal.jpg", "spinners/gulbatman.obj", spinsilvermass,0.08);
+var spinnerGreen = new Spinner(radiusGreen, inertiaGreen, frictionGreen, spinareaGreen, "textures/marble.jpg", "spinners/tredjespinner.obj", spingreenmass,0.053);
 
 init();
 force = 0;
