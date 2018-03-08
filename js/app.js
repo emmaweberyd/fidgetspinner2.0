@@ -41,7 +41,7 @@ var velocityoutput = document.getElementById("velocity");
 var currentmass = document.getElementById("mass"); 
 
 var inertia = document.getElementById("inertia");
-var friction = document.getElementById("drag");
+var airRes = document.getElementById("drag");
 
 // Variabler för start
 var raycaster = new THREE.Raycaster();
@@ -264,7 +264,7 @@ function render() {
 		//Mass
 		currentmass.innerHTML = spinnerRed.mass;
 		inertia.innerHTML = spinnerRed.inertia;
-		friction.innerHTML = spinnerRed.friction;
+		airRes.innerHTML = spinnerRed.airResistance.toFixed(10);
 	}
 	else if (fidget == 2){
 		spinnerSilver.spin(force, steplength);
@@ -274,7 +274,7 @@ function render() {
 		//Mass
 		currentmass.innerHTML = spinnerSilver.mass;
 		inertia.innerHTML = spinnerSilver.inertia;
-		friction.innerHTML = spinnerSilver.friction;
+		airRes.innerHTML = spinnerSilver.airResistance.toFixed(10);
 	}
 	else if (fidget == 3){
 		spinnerGreen.spin(force, steplength);
@@ -284,7 +284,7 @@ function render() {
 		//Mass
 		currentmass.innerHTML = spinnerGreen.mass;
 		inertia.innerHTML = spinnerGreen.inertia;
-		friction.innerHTML = spinnerGreen.friction;
+		airRes.innerHTML = spinnerGreen.airResistance.toFixed(10);
 	}
 
 	renderer.render(scene, camera);
