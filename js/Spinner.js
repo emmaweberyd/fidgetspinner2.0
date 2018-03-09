@@ -31,7 +31,7 @@ class Spinner {
 		this.angularPosition = this.angularPosition + stepLength*this.angularVelocity;
 		
 		// 0.5 i formel, 0.4 är luftmotståndskoefficient, 1.2 är luftens densitet
-		this.airResistance = 0.5 * 0.4 * 1.2041 *  this.spinarea * Math.pow(this.radius*this.angularVelocity*this.Radius , 2);
+		this.airResistance = 0.5 * 0.4 * 1.2041 *  this.spinarea * Math.pow(this.angularVelocity*this.Radius , 2);
 		
 	}
 
